@@ -18,12 +18,16 @@ def index():
 @app.route('/', methods=['POST'])
 def update_table():
     print(flask.request.get_json())
-    # page = int(flask.request.args.get('page'))
-    # per_page = int(flask.request.args.get('per_page'))
-    # session = create_session(user, password, dbname, host, port)
-    # resources = session.query(Resource).all()[:page*per_page]
+    page = int(flask.request.get_json()['page'])
+    per_page = int(flask.request.get_json()['per_page'])
+    session = create_session(user, password, dbname, host, port)
+    resources = session.query(Resource).all()[(page-1)*per_page:page*per_page]
+    res_dict = [{'date': res.date.strftime("%Y-%m-%d"),
+                 'name': res.name,
+                 'amount': res.amount,
+                 'distance': res.distance} for res in resources]
     # return flask.render_template('table.html', resources=resources)
-    return ''
+    return flask.jsonify(res_dict)
 
 
 if __name__ == "__main__":
