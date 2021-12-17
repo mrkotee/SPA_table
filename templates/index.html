@@ -10,11 +10,7 @@
 <body>
 
 <div id="app">
-    кол-во на странице<select name="per_page" ref="per_page" v-model="per_page"><option selected value=20>20</option><option value=40>40</option></select>
-    страница<select name="page" @change="onchange($event)"  ref="page" v-model="page">
-        <option selected value=1>1</option>
-        <option value=2>2</option>
-    </select>
+
     <v-table v-bind:resources="resources" v-bind:page="page" v-bind:per_page="per_page">
 
     </v-table>
