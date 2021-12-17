@@ -52,16 +52,17 @@ def update_table():
     elif request == "search":
         page = 1
         search_field = flask.request.get_json()['search_field']
+        search_opt = flask.request.get_json()['search_opt']
         search = flask.request.get_json()['search']
 
         if search_field == 'name':
-            resources = resources.filter(Resource.name == search)
+            resources = set_filter_query(resources, Resource.name, search, search_opt)
         elif search_field == 'amount':
-            resources = resources.filter(Resource.amount == search)
+            resources = set_filter_query(resources, Resource.amount, search, search_opt)
         elif search_field == 'distance':
-            resources = resources.filter(Resource.distance == search)
+            resources = set_filter_query(resources, Resource.distance, search, search_opt)
         elif search_field == 'date':
-            resources = resources.filter(Resource.date == search)
+            resources = set_filter_query(resources, Resource.date, search, search_opt)
 
     resources = resources.all()
     pages = len(resources)/per_page
@@ -80,6 +81,17 @@ def set_query_order(query, instance, reverse):
         return query.order_by(instance.desc())
     else:
         return query.order_by(instance.asc())
+
+
+def set_filter_query(query, instance, search, operator):
+    if operator == 'equals':
+        return query.filter(instance == search)
+    elif operator == 'into':
+        return query.filter(instance.like(f'%{search}%'))
+    elif operator == 'larger':
+        return query.filter(instance > search)
+    elif operator == 'less':
+        return query.filter(instance < search)
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ Vue.component(
             return {
             sortKey: 'name',
             search_field: 'name',
+            search_opt: 'equals',
             reverse: false,
             page: 1,
             per_page: 20,
@@ -47,6 +48,7 @@ Vue.component(
                 page: this.page,
                 per_page: this.per_page,
                 search_field: this.search_field,
+                search_opt: this.search_opt,
                 search: this.$refs.search.value,
             }).then( res => (this.resources = res.data.resources, this.pages = res.data.pages) );
         },
@@ -59,7 +61,13 @@ Vue.component(
             <option value="name">Название</option>
             <option value="amount">Количество</option>
             <option value="distance">Расстояние</option>
-        </select>
+    </select>
+    <select name="search_opt" @change="search()"  ref="search_opt" v-model="search_opt">
+            <option selected value="equals">равно</option>
+            <option v-if="search_field != 'date' && search_field != 'amount' && search_field != 'distance'" value="into">содержит</option>
+            <option v-if="search_field != 'name'" value="larger">больше</option>
+            <option v-if="search_field != 'name'" value="less">меньше</option>
+    </select>
     <input v-if="search_field === 'date'" type='date' @change="search()" ref="search" placeholder="Поиск ">
     <input v-else @change="search()" ref="search" placeholder="Поиск ">
     кол-во на странице<select name="per_page" @change="changePages()"  ref="per_page" v-model="per_page">
