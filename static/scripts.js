@@ -19,8 +19,8 @@ Vue.component(
 
               this.sortKey = sortKey;
         },
-        onchange(event) {
-            this.page = event.target.value;
+        onchange() {
+            this.page =  this.$refs.page.value;
             this.per_page = this.$refs.per_page.value;
         },
   },
@@ -39,6 +39,9 @@ Vue.component(
             second = this.page * this.per_page
             return this.sortedresources.slice(first, second)
         },
+        pages: function () {
+            return (this.resources.length/this.per_page).toFixed()
+        },
   },
 
   template: `
@@ -47,9 +50,8 @@ Vue.component(
     кол-во на странице<select name="per_page" ref="per_page" v-model="per_page">
         <option selected value=20>20</option><option value=40>40</option>
     </select>
-    страница<select name="page" @change="onchange($event)"  ref="page" v-model="page">
-           <option selected value=1>1</option>
-           <option value=2>2</option>
+    страница<select name="page" @change="onchange($event)"  ref="page" v-model="page" >
+           <option v-for="inx in parseInt(pages)" :key="inx" >{{ inx }}</option>
     </select>
     <table border="1">
          <tr>
