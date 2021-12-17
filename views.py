@@ -93,6 +93,3 @@ def set_filter_query(query, instance, search, operator):
     elif operator == 'less':
         return query.filter(instance < search)
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
